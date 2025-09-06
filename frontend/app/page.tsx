@@ -64,7 +64,7 @@ export default function Home() {
       <div className="fixed inset-0 bg-gradient-to-br from-blue-900/20 via-transparent to-cyan-900/20 pointer-events-none"></div>
       
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-16">
+      <section className="relative min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 pt-32">
         <div className="container mx-auto grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Side - Content */}
           <motion.div
