@@ -25,17 +25,6 @@ public:
     }
 };`;
 
-// VS Code syntax highlighting tokens
-const syntaxTokens = [
-  { regex: /#include|class|private|public|void|int|return/g, className: 'text-[#569cd6]' }, // Keywords - blue
-  { regex: /<[^>]+>/g, className: 'text-[#ce9178]' }, // Includes - orange
-  { regex: /std::/g, className: 'text-[#4ec9b0]' }, // Namespace - teal
-  { regex: /vector|algorithm|sort|greater/g, className: 'text-[#4ec9b0]' }, // Types - teal
-  { regex: /InterviewQuestion|evaluateCandidate|getTopCandidate|candidates/g, className: 'text-[#dcdcaa]' }, // Functions/Variables - yellow
-  { regex: /\/\/.*$/gm, className: 'text-[#6a9955]' }, // Comments - green
-  { regex: /-?\d+/g, className: 'text-[#b5cea8]' }, // Numbers - light green
-];
-
 export default function CodeEditor() {
   const [displayedCode, setDisplayedCode] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -60,23 +49,82 @@ export default function CodeEditor() {
     }
   }, [currentIndex]);
 
-  // Apply syntax highlighting to the displayed code
-  const getHighlightedCode = (code: string) => {
-    let highlightedCode = code;
+  // Render code with proper syntax highlighting
+  const renderHighlightedCode = (code: string) => {
+    const lines = code.split('\n');
     
-    // Apply syntax highlighting
-    syntaxTokens.forEach(token => {
-      highlightedCode = highlightedCode.replace(token.regex, (match) => {
-        return `<span class="${token.className}">${match}</span>`;
-      });
+    return lines.map((line, lineIndex) => {
+      const renderLine = (text: string) => {
+        const elements = [];
+        let remaining = text;
+        let key = 0;
+
+        // Process the line character by character to apply syntax highlighting
+        while (remaining.length > 0) {
+          let matched = false;
+
+          // Keywords (blue)
+          if (remaining.match(/^(#include|class|private|public|void|int|return|std)\b/)) {
+            const match = remaining.match(/^(#include|class|private|public|void|int|return|std)\b/);
+            elements.push(<span key={key++} className="text-[#569cd6]">{match[1]}</span>);
+            remaining = remaining.slice(match[1].length);
+            matched = true;
+          }
+          // Include brackets (orange)
+          else if (remaining.match(/^<[^>]+>/)) {
+            const match = remaining.match(/^<[^>]+>/);
+            elements.push(<span key={key++} className="text-[#ce9178]">{match[0]}</span>);
+            remaining = remaining.slice(match[0].length);
+            matched = true;
+          }
+          // Types and STL (teal)
+          else if (remaining.match(/^(vector|algorithm|sort|greater)\b/)) {
+            const match = remaining.match(/^(vector|algorithm|sort|greater)\b/);
+            elements.push(<span key={key++} className="text-[#4ec9b0]">{match[1]}</span>);
+            remaining = remaining.slice(match[1].length);
+            matched = true;
+          }
+          // Scope resolution (teal)
+          else if (remaining.match(/^::/)) {
+            elements.push(<span key={key++} className="text-[#4ec9b0]">::</span>);
+            remaining = remaining.slice(2);
+            matched = true;
+          }
+          // Functions and variables (yellow)
+          else if (remaining.match(/^(InterviewQuestion|evaluateCandidate|getTopCandidate|candidates|push_back|begin|end|empty)\b/)) {
+            const match = remaining.match(/^(InterviewQuestion|evaluateCandidate|getTopCandidate|candidates|push_back|begin|end|empty)\b/);
+            elements.push(<span key={key++} className="text-[#dcdcaa]">{match[1]}</span>);
+            remaining = remaining.slice(match[1].length);
+            matched = true;
+          }
+          // Numbers (light green)
+          else if (remaining.match(/^-?\d+/)) {
+            const match = remaining.match(/^-?\d+/);
+            elements.push(<span key={key++} className="text-[#b5cea8]">{match[0]}</span>);
+            remaining = remaining.slice(match[0].length);
+            matched = true;
+          }
+          
+          if (!matched) {
+            elements.push(<span key={key++} className="text-[#d4d4d4]">{remaining[0]}</span>);
+            remaining = remaining.slice(1);
+          }
+        }
+        
+        return elements;
+      };
+
+      return (
+        <div key={lineIndex} className="leading-relaxed">
+          {renderLine(line)}
+        </div>
+      );
     });
-    
-    return highlightedCode;
   };
 
   return (
     <motion.div 
-      className="relative w-full max-w-lg mx-auto"
+      className="relative w-full max-w-2xl mx-auto"
       initial={{ opacity: 0, scale: 0.9 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay: 0.5 }}
@@ -117,10 +165,10 @@ export default function CodeEditor() {
         </div>
         
         {/* VS Code Editor Content */}
-        <div className="vscode-editor-content p-6">
+        <div className="vscode-editor-content p-6 min-h-[400px]">
           <div className="flex">
             {/* Line Numbers */}
-            <div className="vscode-line-numbers pr-4 text-right select-none">
+            <div className="vscode-line-numbers pr-4 text-right select-none min-w-[40px]">
               {displayedCode.split('\n').map((_, i) => (
                 <div key={i} className="text-[#858585] text-sm leading-relaxed font-mono">
                   {i + 1}
@@ -129,14 +177,11 @@ export default function CodeEditor() {
             </div>
             
             {/* Code Content */}
-            <div className="flex-1 font-mono text-sm leading-relaxed">
-              <pre 
-                className="text-[#d4d4d4] whitespace-pre-wrap"
-                dangerouslySetInnerHTML={{ 
-                  __html: getHighlightedCode(displayedCode) + 
-                    (!isComplete ? '<span class="vscode-cursor">|</span>' : '') 
-                }}
-              />
+            <div className="flex-1 font-mono text-sm overflow-hidden">
+              <div className="text-[#d4d4d4] whitespace-pre">
+                {renderHighlightedCode(displayedCode)}
+                {!isComplete && <span className="vscode-cursor">|</span>}
+              </div>
             </div>
           </div>
         </div>
