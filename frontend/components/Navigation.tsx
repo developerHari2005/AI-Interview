@@ -53,11 +53,8 @@ export default function Navigation() {
                 >
                   Pricing
                 </a>
-              </div>
-              
-              <div className="ml-6">
                 <Link href="/login">
-                  <button className="modern-cta-button group">
+                  <button className="modern-cta-button-navbar group">
                     <span className="relative z-10 flex items-center">
                       Get Started
                       <div className="ml-2 transform group-hover:translate-x-1 transition-transform duration-300">
