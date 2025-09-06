@@ -1,10 +1,10 @@
 package models
 
-import "go.mongodb.org/mongo-driver/bson/primitive"
+import "gorm.io/gorm"
 
 // User represents a user in the database
 type User struct {
-	ID       primitive.ObjectID `bson:"_id,omitempty" json:"id"`
-	Email    string             `json:"email" binding:"required,email"`
-	Password string             `json:"password" binding:"required,min=6"`
+	gorm.Model
+	Email    string `gorm:"unique;not null" json:"email" binding:"required,email"`
+	Password string `gorm:"not null" json:"-"` // Omit password from JSON responses
 }
