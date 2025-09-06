@@ -6,7 +6,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
       <div className="flex w-full max-w-4xl rounded-xl shadow-2xl overflow-hidden bg-white/5 backdrop-blur-lg border border-white/10">
-        {/* Login Form */}
         <div className="w-full md:w-1/2 p-8 flex flex-col justify-center">
           <h2 className="text-3xl font-bold mb-6 text-white text-center">
             Login to InterviewAI
@@ -63,10 +62,8 @@ export default function LoginPage() {
             </Link>
           </p>
         </div>
-        {/* Code Editor Animation */}
         <div className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-blue-900/30 to-cyan-900/30 p-8">
           <div className="vscode-mini-editor w-full max-w-sm shadow-2xl glow-blue-enhanced">
-            {/* VS Code Header */}
             <div className="vscode-mini-header">
               <div className="flex items-center space-x-3">
                 <div className="flex space-x-2">
@@ -77,8 +74,6 @@ export default function LoginPage() {
                 <span className="text-xs text-gray-300 font-medium">login.js</span>
               </div>
             </div>
-            
-            {/* VS Code Content */}
             <div className="vscode-mini-content">
               <div className="flex">
                 <div className="text-gray-500 text-right pr-3 select-none font-mono text-xs">
@@ -97,13 +92,46 @@ export default function LoginPage() {
                   <div className="text-green-400">// Welcome back!</div>
                   <div className="text-green-400">// Login to access your dashboard</div>
                   <div></div>
-                  <div><span className="text-blue-400">const</span> <span className="text-cyan-300">email</span> <span className="text-gray-300">=</span> <span className="text-orange-300">&quot;you@example.com&quot;</span><span className="text-gray-300">;</span></div>
-                  <div><span className="text-blue-400">const</span> <span className="text-cyan-300">password</span> <span className="text-gray-300">=</span> <span className="text-orange-300">&quot;••••••••&quot;</span><span className="text-gray-300">;</span></div>
+                  <div>
+                    <span className="text-blue-400">const</span>{" "}
+                    <span className="text-cyan-300">email</span>{" "}
+                    <span className="text-gray-300">=</span>{" "}
+                    <span className="text-orange-300">&quot;you@example.com&quot;</span>
+                    <span className="text-gray-300">;</span>
+                  </div>
+                  <div>
+                    <span className="text-blue-400">const</span>{" "}
+                    <span className="text-cyan-300">password</span>{" "}
+                    <span className="text-gray-300">=</span>{" "}
+                    <span className="text-orange-300">&quot;••••••••&quot;</span>
+                    <span className="text-gray-300">;</span>
+                  </div>
                   <div></div>
-                  <div><span className="text-purple-400">if</span> <span className="text-gray-300">(</span><span className="text-yellow-300">login</span><span className="text-gray-300">(</span><span className="text-cyan-300">email</span><span className="text-gray-300">,</span> <span className="text-cyan-300">password</span><span className="text-gray-300">))</span> <span className="text-gray-300">{</span></div>
-                  <div><span className="text-gray-300">  </span><span className="text-yellow-300">redirect</span><span className="text-gray-300">(</span><span className="text-orange-300">&quot;/dashboard&quot;</span><span className="text-gray-300">);</span></div>
-                  <div><span className="text-gray-300">}</span></div>
-                  <div><span className="text-green-400">// Start your AI journey</span><span className="animate-pulse text-white">|</span></div>
+                  <div>
+                    <span className="text-purple-400">if</span>{" "}
+                    <span className="text-gray-300">(</span>
+                    <span className="text-yellow-300">login</span>
+                    <span className="text-gray-300">(</span>
+                    <span className="text-cyan-300">email</span>
+                    <span className="text-gray-300">,</span>{" "}
+                    <span className="text-cyan-300">password</span>
+                    <span className="text-gray-300">))</span>{" "}
+                    <span className="text-gray-300">{"{"}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-300">  </span>
+                    <span className="text-yellow-300">redirect</span>
+                    <span className="text-gray-300">(</span>
+                    <span className="text-orange-300">&quot;/dashboard&quot;</span>
+                    <span className="text-gray-300">);</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-300">{"}"}</span>
+                  </div>
+                  <div>
+                    <span className="text-green-400">// Start your AI journey</span>
+                    <span className="animate-pulse text-white">|</span>
+                  </div>
                 </div>
               </div>
             </div>
