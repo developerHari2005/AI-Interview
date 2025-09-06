@@ -55,6 +55,15 @@
   background-clip: text;
 }
 
+.gradient-text-enhanced {
+  background: linear-gradient(135deg, #60A5FA, #34D399, #A78BFA, #22D3EE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 300% 300%;
+  animation: gradient-shift 8s ease-in-out infinite;
+}
+
 .glass-morphism {
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
@@ -62,8 +71,106 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+.modern-navbar-glass {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 80px rgba(59, 130, 246, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.nav-link-modern {
+  @apply px-4 py-2.5 text-sm font-medium text-gray-300 hover:text-white rounded-lg transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm relative;
+}
+
+.nav-link-modern::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, #22D3EE);
+  transform: translateX(-50%);
+  transition: width 0.3s ease;
+}
+
+.nav-link-modern:hover::before {
+  width: 80%;
+}
+
+.modern-cta-button {
+  @apply relative px-6 py-3 text-sm font-semibold text-white rounded-xl overflow-hidden transition-all duration-300 transform hover:scale-105 active:scale-95;
+  background: linear-gradient(135deg, #3B82F6, #1E40AF, #22D3EE);
+  box-shadow: 
+    0 10px 25px rgba(59, 130, 246, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.modern-cta-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.6s ease;
+}
+
+.modern-cta-button:hover::before {
+  left: 100%;
+}
+
+.modern-cta-button:hover {
+  background: linear-gradient(135deg, #2563EB, #1D4ED8, #0891B2);
+  box-shadow: 
+    0 15px 35px rgba(59, 130, 246, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.modern-cta-button-mobile {
+  @apply w-full px-6 py-3.5 text-sm font-semibold text-white rounded-xl transition-all duration-300 flex items-center justify-center;
+  background: linear-gradient(135deg, #3B82F6, #1E40AF, #22D3EE);
+  box-shadow: 
+    0 10px 25px rgba(59, 130, 246, 0.4),
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.mobile-nav-link {
+  @apply block px-4 py-3 text-gray-300 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300 font-medium relative;
+}
+
+.mobile-nav-link::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3B82F6, #22D3EE);
+  transform: translateY(-50%);
+  transition: width 0.3s ease;
+}
+
+.mobile-nav-link:hover::before {
+  width: 4px;
+}
+
 .glow-blue {
   box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.glow-blue-enhanced {
+  box-shadow: 
+    0 0 30px rgba(59, 130, 246, 0.4),
+    0 0 60px rgba(34, 211, 238, 0.2);
 }
 
 .glow-cyan {
