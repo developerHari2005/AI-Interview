@@ -80,36 +80,44 @@ export default function SignupPage() {
             <div className="vscode-mini-header">
               <div className="flex items-center space-x-3">
                 <div className="flex space-x-2">
-                  <div className="w-3 h-3 bg-[#ff5f57] rounded-full"></div>
-                  <div className="w-3 h-3 bg-[#ffbd2e] rounded-full"></div>
-                  <div className="w-3 h-3 bg-[#28ca42] rounded-full"></div>
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 </div>
-                <span className="text-xs text-[#cccccc] font-medium">signup.js</span>
+                <span className="text-xs text-gray-300 font-medium">signup.js</span>
               </div>
             </div>
             
             {/* VS Code Content */}
             <div className="vscode-mini-content">
               <div className="flex">
-                <div className="text-[#858585] text-right pr-3 select-none font-mono text-xs">
-                  {Array.from({length: 14}, (_, i) => (
-                    <div key={i} className="leading-5">{i + 1}</div>
-                  ))}
+                <div className="text-gray-500 text-right pr-3 select-none font-mono text-xs">
+                  <div className="leading-5">1</div>
+                  <div className="leading-5">2</div>
+                  <div className="leading-5">3</div>
+                  <div className="leading-5">4</div>
+                  <div className="leading-5">5</div>
+                  <div className="leading-5">6</div>
+                  <div className="leading-5">7</div>
+                  <div className="leading-5">8</div>
+                  <div className="leading-5">9</div>
+                  <div className="leading-5">10</div>
+                  <div className="leading-5">11</div>
+                  <div className="leading-5">12</div>
                 </div>
                 <div className="flex-1 font-mono text-xs leading-5">
-                  <div className="text-[#6a9955]">// New here?</div>
-                  <div className="text-[#6a9955]">// Create your InterviewAI account</div>
+                  <div className="text-green-400">// New here?</div>
+                  <div className="text-green-400">// Create your InterviewAI account</div>
                   <div></div>
-                  <div><span className="text-[#569cd6]">function</span> <span className="text-[#dcdcaa]">signup</span><span className="text-[#d4d4d4]">(</span><span className="text-[#9cdcfe]">email</span><span className="text-[#d4d4d4]">,</span> <span className="text-[#9cdcfe]">password</span><span className="text-[#d4d4d4]">)</span> <span className="text-[#d4d4d4]">{</span></div>
-                  <div><span className="text-[#d4d4d4]">  </span><span className="text-[#6a9955]">// Validate input</span></div>
-                  <div><span className="text-[#d4d4d4]">  </span><span className="text-[#c586c0]">if</span> <span className="text-[#d4d4d4]">(!</span><span className="text-[#9cdcfe]">email</span> <span className="text-[#d4d4d4]">||</span> <span className="text-[#d4d4d4]">!</span><span className="text-[#9cdcfe]">password</span><span className="text-[#d4d4d4]">)</span> <span className="text-[#569cd6]">return</span> <span className="text-[#569cd6]">false</span><span className="text-[#d4d4d4]">;</span></div>
+                  <div><span className="text-blue-400">function</span> <span className="text-yellow-300">signup</span><span className="text-gray-300">(</span><span className="text-cyan-300">email</span><span className="text-gray-300">,</span> <span className="text-cyan-300">password</span><span className="text-gray-300">)</span> <span className="text-gray-300">{</span></div>
+                  <div><span className="text-gray-300">  </span><span className="text-green-400">// Validate input</span></div>
+                  <div><span className="text-gray-300">  </span><span className="text-purple-400">if</span> <span className="text-gray-300">(!</span><span className="text-cyan-300">email</span> <span className="text-gray-300">||</span> <span className="text-gray-300">!</span><span className="text-cyan-300">password</span><span className="text-gray-300">)</span> <span className="text-blue-400">return</span> <span className="text-blue-400">false</span><span className="text-gray-300">;</span></div>
                   <div></div>
-                  <div><span className="text-[#d4d4d4]">  </span><span className="text-[#6a9955]">// Create account</span></div>
-                  <div><span className="text-[#d4d4d4]">  </span><span className="text-[#569cd6]">const</span> <span className="text-[#9cdcfe]">user</span> <span className="text-[#d4d4d4]">=</span> <span className="text-[#569cd6]">await</span> <span className="text-[#dcdcaa]">createUser</span><span className="text-[#d4d4d4]">(</span><span className="text-[#9cdcfe]">email</span><span className="text-[#d4d4d4]">);</span></div>
-                  <div><span className="text-[#d4d4d4]">  </span><span className="text-[#569cd6]">return</span> <span className="text-[#9cdcfe]">user</span><span className="text-[#d4d4d4]">;</span></div>
-                  <div><span className="text-[#d4d4d4]">}</span></div>
-                  <div></div>
-                  <div><span className="text-[#6a9955]">// Join thousands of users</span><span className="animate-pulse">|</span></div>
+                  <div><span className="text-gray-300">  </span><span className="text-green-400">// Create account</span></div>
+                  <div><span className="text-gray-300">  </span><span className="text-blue-400">const</span> <span className="text-cyan-300">user</span> <span className="text-gray-300">=</span> <span className="text-blue-400">await</span> <span className="text-yellow-300">createUser</span><span className="text-gray-300">(</span><span className="text-cyan-300">email</span><span className="text-gray-300">);</span></div>
+                  <div><span className="text-gray-300">  </span><span className="text-blue-400">return</span> <span className="text-cyan-300">user</span><span className="text-gray-300">;</span></div>
+                  <div><span className="text-gray-300">}</span></div>
+                  <div><span className="text-green-400">// Join thousands of users</span><span className="animate-pulse text-white">|</span></div>
                 </div>
               </div>
             </div>
