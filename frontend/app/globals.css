@@ -177,6 +177,89 @@
   box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
 }
 
+/* VS Code Editor Styling */
+.vscode-editor-container {
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.5),
+    0 0 80px rgba(59, 130, 246, 0.1);
+}
+
+.vscode-title-bar {
+  background: #323233;
+  border-bottom: 1px solid #2d2d30;
+}
+
+.vscode-tab-bar {
+  background: #2d2d30;
+}
+
+.vscode-tab-active {
+  background: #1e1e1e;
+  border-right: 1px solid #2d2d30;
+  position: relative;
+}
+
+.vscode-tab-active::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #007acc;
+}
+
+.vscode-editor-content {
+  background: #1e1e1e;
+  min-height: 300px;
+}
+
+.vscode-line-numbers {
+  color: #858585;
+  user-select: none;
+  min-width: 40px;
+}
+
+.vscode-cursor {
+  background-color: #ffffff;
+  animation: vscode-blink 1s infinite;
+  width: 2px;
+  display: inline-block;
+}
+
+@keyframes vscode-blink {
+  0%, 50% { background-color: #ffffff; }
+  51%, 100% { background-color: transparent; }
+}
+
+/* Login/Signup VS Code Styling */
+.vscode-mini-editor {
+  background: #1e1e1e;
+  border: 1px solid #3c3c3c;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.vscode-mini-header {
+  background: #323233;
+  border-bottom: 1px solid #2d2d30;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.vscode-mini-content {
+  background: #1e1e1e;
+  padding: 16px;
+  font-family: 'Fira Code', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #d4d4d4;
+}
+
 .typing-cursor {
   display: inline-block;
   background-color: #22D3EE;
