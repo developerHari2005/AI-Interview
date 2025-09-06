@@ -7,6 +7,7 @@ import { FaGithub } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -26,12 +27,12 @@ export default function SignupPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/auth/signup", {
+      const response = await fetch("http://localhost:8080/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ username, email, password }),
       });
 
       const data = await response.json();
@@ -55,7 +56,7 @@ export default function SignupPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/google");
+      const response = await fetch("http://localhost:8080/api/auth/google");
       const data = await response.json();
       
       if (response.ok && data.auth_url) {
@@ -71,7 +72,7 @@ export default function SignupPage() {
 
   const handleGithubLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/github");
+      const response = await fetch("http://localhost:8080/api/auth/github");
       const data = await response.json();
       
       if (response.ok && data.auth_url) {
@@ -121,6 +122,16 @@ export default function SignupPage() {
             </div>
           )}
           <form className="space-y-5" onSubmit={handleSubmit}>
+            <div>
+              <label className="block text-gray-300 mb-1">Username</label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                required
+              />
+            </div>
             <div>
               <label className="block text-gray-300 mb-1">Email</label>
               <input

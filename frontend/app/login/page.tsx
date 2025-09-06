@@ -19,7 +19,7 @@ export default function LoginPage() {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:8080/auth/login", {
+      const response = await fetch("http://localhost:8080/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/google");
+      const response = await fetch("http://localhost:8080/api/auth/google");
       const data = await response.json();
       
       if (response.ok && data.auth_url) {
@@ -64,7 +64,7 @@ export default function LoginPage() {
 
   const handleGithubLogin = async () => {
     try {
-      const response = await fetch("http://localhost:8080/auth/github");
+      const response = await fetch("http://localhost:8080/api/auth/github");
       const data = await response.json();
       
       if (response.ok && data.auth_url) {
