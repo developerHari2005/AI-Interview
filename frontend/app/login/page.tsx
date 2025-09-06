@@ -64,25 +64,43 @@ export default function LoginPage() {
           </p>
         </div>
         {/* Code Editor Animation */}
-        <div className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-blue-900/30 to-cyan-900/30">
-          <div className="w-80 h-64 rounded-lg shadow-lg bg-gray-900 border border-gray-700 p-4 relative overflow-hidden animate-pulse">
-            <div className="flex space-x-2 mb-4">
-              <span className="w-3 h-3 bg-red-500 rounded-full"></span>
-              <span className="w-3 h-3 bg-yellow-500 rounded-full"></span>
-              <span className="w-3 h-3 bg-green-500 rounded-full"></span>
+        <div className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-blue-900/30 to-cyan-900/30 p-8">
+          <div className="vscode-mini-editor w-full max-w-sm shadow-2xl glow-blue-enhanced">
+            {/* VS Code Header */}
+            <div className="vscode-mini-header">
+              <div className="flex items-center space-x-3">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-[#ff5f57] rounded-full"></div>
+                  <div className="w-3 h-3 bg-[#ffbd2e] rounded-full"></div>
+                  <div className="w-3 h-3 bg-[#28ca42] rounded-full"></div>
+                </div>
+                <span className="text-xs text-[#cccccc] font-medium">login.js</span>
+              </div>
             </div>
-            <pre className="text-xs text-gray-300 font-mono whitespace-pre-line">
-              {`// Welcome back!
-// Login to access your AI interview dashboard
-
-const email = "you@example.com";
-const password = "••••••••";
-
-if (login(email, password)) {
-  redirect("/dashboard");
-}
-`}
-            </pre>
+            
+            {/* VS Code Content */}
+            <div className="vscode-mini-content">
+              <div className="flex">
+                <div className="text-[#858585] text-right pr-3 select-none font-mono text-xs">
+                  {Array.from({length: 12}, (_, i) => (
+                    <div key={i} className="leading-5">{i + 1}</div>
+                  ))}
+                </div>
+                <div className="flex-1 font-mono text-xs leading-5">
+                  <div className="text-[#6a9955]">// Welcome back!</div>
+                  <div className="text-[#6a9955]">// Login to access your dashboard</div>
+                  <div></div>
+                  <div><span className="text-[#569cd6]">const</span> <span className="text-[#9cdcfe]">email</span> <span className="text-[#d4d4d4]">=</span> <span className="text-[#ce9178]">"you@example.com"</span><span className="text-[#d4d4d4]">;</span></div>
+                  <div><span className="text-[#569cd6]">const</span> <span className="text-[#9cdcfe]">password</span> <span className="text-[#d4d4d4]">=</span> <span className="text-[#ce9178]">"••••••••"</span><span className="text-[#d4d4d4]">;</span></div>
+                  <div></div>
+                  <div><span className="text-[#c586c0]">if</span> <span className="text-[#d4d4d4]">(</span><span className="text-[#dcdcaa]">login</span><span className="text-[#d4d4d4]">(</span><span className="text-[#9cdcfe]">email</span><span className="text-[#d4d4d4]">,</span> <span className="text-[#9cdcfe]">password</span><span className="text-[#d4d4d4]">))</span> <span className="text-[#d4d4d4]">{</span></div>
+                  <div><span className="text-[#d4d4d4]">  </span><span className="text-[#dcdcaa]">redirect</span><span className="text-[#d4d4d4]">(</span><span className="text-[#ce9178]">"/dashboard"</span><span className="text-[#d4d4d4]">);</span></div>
+                  <div><span className="text-[#d4d4d4]">}</span></div>
+                  <div></div>
+                  <div><span className="text-[#6a9955]">// Start your AI journey</span><span className="animate-pulse">|</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
