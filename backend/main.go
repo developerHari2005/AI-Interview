@@ -5,8 +5,11 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"unicode"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin/binding"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/postgres"
@@ -15,6 +18,27 @@ import (
 )
 
 var DB *gorm.DB
+
+// Custom password validation
+func validatePassword(fl validator.FieldLevel) bool {
+	password := fl.Field().String()
+	if len(password) < 8 {
+		return false
+	}
+	var (
+		hasUpper = false
+		hasLower = false
+	)
+	for _, char := range password {
+		switch {
+		case unicode.IsUpper(char):
+			hasUpper = true
+		case unicode.IsLower(char):
+			hasLower = true
+		}
+	}
+	return hasUpper && hasLower
+}
 
 func ConnectToDB() {
 	var err error
@@ -34,7 +58,7 @@ func ConnectToDB() {
 func Signup(c *gin.Context) {
 	var body struct {
 		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required,min=6"`
+		Password string `json:"password" binding:"required,password"`
 	}
 
 	if err := c.ShouldBindJSON(&body); err != nil {
@@ -117,6 +141,11 @@ func init() {
 
 func main() {
 	r := gin.Default()
+
+	// Register custom validator
+	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
+		v.RegisterValidation("password", validatePassword)
+	}
 
 	// Setup routes
 	AuthRoutes(r)
