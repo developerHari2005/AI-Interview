@@ -1,125 +1,58 @@
 package main
 
 import (
-	"fmt"
+	"io"
 	"log"
-	"net/http"
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"interview-ai/backend/models"
 )
 
-var DB *gorm.DB
-
-func ConnectToDB() {
-	var err error
-	dsn := os.Getenv("DB_URL")
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
-	if err != nil {
-		log.Fatal("Failed to connect to database")
-	}
-
-	fmt.Println("? Connected successfully to the database")
-
-	fmt.Println("? Running migrations")
-	DB.AutoMigrate(&models.User{})
-}
-
-func Signup(c *gin.Context) {
-	var body struct {
-		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required,min=6"`
-	}
-
-	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
-		return
-	}
-
-	// Hash password
-	hash, err := bcrypt.GenerateFromPassword([]byte(body.Password), bcrypt.DefaultCost)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to hash password"})
-		return
-	}
-
-	// Create user
-	user := models.User{Email: body.Email, Password: string(hash)}
-	result := DB.Create(&user)
-
-	if result.Error != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create user"})
-		return
-	}
-
-	c.JSON(http.StatusCreated, gin.H{"message": "User created successfully"})
-}
-
-func Login(c *gin.Context) {
-	var body struct {
-		Email    string `json:"email" binding:"required,email"`
-		Password string `json:"password" binding:"required"`
-	}
-
-	if err := c.ShouldBindJSON(&body); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
-		return
-	}
-
-	// Find user
-	var user models.User
-	result := DB.First(&user, "email = ?", body.Email)
-
-	if result.Error != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "User not found"})
-		return
-	}
-
-	// Compare password
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(body.Password))
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid password"})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": "Login successful"})
-}
-
-func AuthRoutes(router *gin.Engine) {
-	api := router.Group("/api")
-	{
-		api.POST("/signup", Signup)
-		api.POST("/login", Login)
-		api.GET("/ping", func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "pong",
-			})
-		})
-	}
-}
-
-func init() {
-	// Load .env file
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	// Connect to DB
-	ConnectToDB()
-}
-
 func main() {
+	// Set up logging to debug.log file
+	logFile, err := os.OpenFile("../../debug.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal("Failed to open debug.log file:", err)
+	}
+	defer logFile.Close()
+
+	// Create a multi-writer for both console and file
+	multiWriter := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(multiWriter)
+
+	// Load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found")
+	}
+
+	// Initialize database
+	initDB()
+
+	// Initialize OAuth
+	initOAuth()
+
+	// Create Gin router
 	r := gin.Default()
 
-	// Setup routes
-	AuthRoutes(r)
+	// CORS middleware
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:3001"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+	}))
 
-	r.Run() // listens and serve on 0.0.0.0:8080
+	// Routes
+	setupRoutes(r)
+
+	// Get port from environment or default to 8080
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Printf("Server starting on port %s", port)
+	r.Run(":" + port)
 }
