@@ -37,7 +37,7 @@ export default function SignupPage() {
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         // Store token in localStorage
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
@@ -45,9 +45,10 @@ export default function SignupPage() {
         // Redirect to dashboard or home
         router.push("/");
       } else {
-        setError(data.error || "Signup failed");
+        setError(data.error || data.message || "Signup failed");
       }
     } catch (err) {
+      console.error("Signup error:", err);
       setError("Network error. Please try again.");
     } finally {
       setLoading(false);
@@ -59,13 +60,14 @@ export default function SignupPage() {
       const response = await fetch("http://localhost:8080/api/auth/google");
       const data = await response.json();
       
-      if (response.ok && data.auth_url) {
+      if (response.ok && data.success && data.auth_url) {
         // Redirect to Google OAuth
         window.location.href = data.auth_url;
       } else {
-        setError("Failed to initiate Google login");
+        setError(data.error || "Google login is not available yet");
       }
     } catch (err) {
+      console.error("Google login error:", err);
       setError("Network error. Please try again.");
     }
   };
@@ -75,13 +77,14 @@ export default function SignupPage() {
       const response = await fetch("http://localhost:8080/api/auth/github");
       const data = await response.json();
       
-      if (response.ok && data.auth_url) {
+      if (response.ok && data.success && data.auth_url) {
         // Redirect to GitHub OAuth
         window.location.href = data.auth_url;
       } else {
-        setError("Failed to initiate GitHub login");
+        setError(data.error || "GitHub login is not available yet");
       }
     } catch (err) {
+      console.error("GitHub login error:", err);
       setError("Network error. Please try again.");
     }
   };

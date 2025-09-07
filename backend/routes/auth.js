@@ -1,9 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const { check, validationResult } = require('express-validator');
 const User = require('../models/User');
+const generateToken = require('../utils/generateToken');
+const auth = require('../middleware/auth');
 
 // @route   POST api/auth/signup
 // @desc    Register a new user
@@ -12,6 +13,7 @@ router.post(
   '/signup',
   [
     check('username', 'Username is required').not().isEmpty(),
+    check('username', 'Username must be at least 3 characters').isLength({ min: 3 }),
     check('email', 'Please include a valid email').isEmail(),
     check(
       'password',
@@ -19,25 +21,38 @@ router.post(
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
-    console.log('Signup route hit');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      console.log('Validation errors:', errors.array());
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ 
+        success: false,
+        error: errors.array()[0].msg,
+        errors: errors.array()
+      });
     }
 
     const { username, email, password } = req.body;
-    console.log('Request body:', { username, email, password });
 
     try {
-      let user = await User.findOne({ email });
-      console.log('User found by email:', user);
-
-      if (user) {
-        return res.status(400).json({ msg: 'User already exists' });
+      // Check if user already exists by email
+      let existingUser = await User.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ 
+          success: false,
+          error: 'User with this email already exists' 
+        });
       }
 
-      user = new User({
+      // Check if username is taken
+      existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res.status(400).json({ 
+          success: false,
+          error: 'Username is already taken' 
+        });
+      }
+
+      // Create new user
+      const user = new User({
         username,
         email,
         password,
@@ -45,33 +60,29 @@ router.post(
 
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
-      console.log('User password hashed');
 
       await user.save();
-      console.log('User saved to database');
 
-      const payload = {
+      // Generate token
+      const token = generateToken(user.id);
+
+      res.status(201).json({
+        success: true,
+        message: 'User registered successfully',
+        token,
         user: {
           id: user.id,
-        },
-      };
-
-      jwt.sign(
-        payload,
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' },
-        (err, token) => {
-          if (err) {
-            console.error('JWT sign error:', err);
-            throw err;
-          }
-          console.log('JWT token generated');
-          res.json({ token });
+          username: user.username,
+          email: user.email,
+          date: user.date
         }
-      );
+      });
     } catch (err) {
-      console.error('Server error during signup:', err.message);
-      res.status(500).send('Server error');
+      console.error('Signup error:', err);
+      res.status(500).json({ 
+        success: false,
+        error: 'Server error during registration' 
+      });
     }
   }
 );
@@ -88,72 +99,121 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ 
+        success: false,
+        error: errors.array()[0].msg,
+        errors: errors.array()
+      });
     }
 
     const { email, password } = req.body;
 
     try {
-      let user = await User.findOne({ email });
+      const user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ msg: 'Invalid Credentials' });
+        return res.status(400).json({ 
+          success: false,
+          error: 'Invalid email or password' 
+        });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ msg: 'Invalid Credentials' });
+        return res.status(400).json({ 
+          success: false,
+          error: 'Invalid email or password' 
+        });
       }
 
-      const payload = {
+      // Generate token
+      const token = generateToken(user.id);
+
+      res.json({
+        success: true,
+        message: 'Login successful',
+        token,
         user: {
           id: user.id,
-        },
-      };
-
-      jwt.sign(
-        payload,
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' },
-        (err, token) => {
-          if (err) throw err;
-          res.json({ token });
+          username: user.username,
+          email: user.email,
+          date: user.date
         }
-      );
+      });
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+      console.error('Login error:', err);
+      res.status(500).json({ 
+        success: false,
+        error: 'Server error during login' 
+      });
     }
   }
 );
+
+// @route   GET api/auth/me
+// @desc    Get current user
+// @access  Private
+router.get('/me', auth, async (req, res) => {
+  try {
+    res.json({
+      success: true,
+      user: {
+        id: req.user.id,
+        username: req.user.username,
+        email: req.user.email,
+        date: req.user.date
+      }
+    });
+  } catch (err) {
+    console.error('Get user error:', err);
+    res.status(500).json({ 
+      success: false,
+      error: 'Server error' 
+    });
+  }
+});
 
 // @route   GET api/auth/google
 // @desc    Authenticate with Google
 // @access  Public
 router.get('/google', (req, res) => {
-  res.send('Google OAuth route');
+  res.status(501).json({ 
+    success: false,
+    error: 'Google OAuth not implemented yet',
+    message: 'This feature will be available in a future update'
+  });
 });
 
 // @route   GET api/auth/google/callback
 // @desc    Google OAuth callback
 // @access  Public
 router.get('/google/callback', (req, res) => {
-  res.send('Google OAuth callback route');
+  res.status(501).json({ 
+    success: false,
+    error: 'Google OAuth callback not implemented yet' 
+  });
 });
 
 // @route   GET api/auth/github
 // @desc    Authenticate with GitHub
 // @access  Public
 router.get('/github', (req, res) => {
-  res.send('GitHub OAuth route');
+  res.status(501).json({ 
+    success: false,
+    error: 'GitHub OAuth not implemented yet',
+    message: 'This feature will be available in a future update'
+  });
 });
 
 // @route   GET api/auth/github/callback
 // @desc    GitHub OAuth callback
 // @access  Public
 router.get('/github/callback', (req, res) => {
-  res.send('GitHub OAuth callback route');
+  res.status(501).json({ 
+    success: false,
+    error: 'GitHub OAuth callback not implemented yet' 
+  });
 });
 
 module.exports = router;
